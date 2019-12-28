@@ -43,7 +43,8 @@ type collector struct {
 	waitedForDesc   *prometheus.Desc
 }
 
-func newPrometheus(dbName string, getter sql.DBStats) *collector {
+// NewSQLStats provides initialization of collecting of metrics
+func NewSQLStats(dbName string, getter StatsGetter) *collector {
 	initPromMetricsOnce.Do(func() { prometheus.MustRegister(promMetric) })
 	return &collector{
 		dbName:          dbName,
