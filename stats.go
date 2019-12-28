@@ -49,13 +49,13 @@ func NewSQLStats(dbName string, getter StatsGetter) *collector {
 	return &collector{
 		dbName:          dbName,
 		getter:          getter,
-		maxIdleDesc:     prometheus.NewDesc(prometheus.BuildFQName(namespace, subsystem, "max_idle"), "The total number of connections closed due to SetMaxIdleConns", []string{"db"}, nil),
-		maxLifetimeDesc: prometheus.NewDesc(prometheus.BuildFQName(namespace, subsystem, "max_idle"), "The total number of connections closed due to SetConnMaxLifetime.", []string{"db"}, nil),
-		inUseDesc:       prometheus.NewDesc(prometheus.BuildFQName(namespace, subsystem, "max_idle"), "The number of connections currently in use.", []string{"db"}, nil),
-		idleDesc:        prometheus.NewDesc(prometheus.BuildFQName(namespace, subsystem, "max_idle"), "The number of idle connections.", []string{"db"}, nil),
-		maxOpenDesc:     prometheus.NewDesc(prometheus.BuildFQName(namespace, subsystem, "max_idle"), "Maximum number of open connections to the database.", []string{"db"}, nil),
-		openDesc:        prometheus.NewDesc(prometheus.BuildFQName(namespace, subsystem, "max_idle"), "The number of established connections both in use and idle.", []string{"db"}, nil),
-		waitedForDesc:   prometheus.NewDesc(prometheus.BuildFQName(namespace, subsystem, "max_idle"), "The total number of connections waited for.", []string{"db"}, nil),
+		maxIdleDesc:     prometheus.NewDesc(prometheus.BuildFQName(namespace, subsystem, "max_idle"), "The total number of connections closed due to SetMaxIdleConns", []string{"db_stat"}, nil),
+		maxLifetimeDesc: prometheus.NewDesc(prometheus.BuildFQName(namespace, subsystem, "max_lifetime"), "The total number of connections closed due to SetConnMaxLifetime.", []string{"db_stat"}, nil),
+		inUseDesc:       prometheus.NewDesc(prometheus.BuildFQName(namespace, subsystem, "in_use"), "The number of connections currently in use.", []string{"db_stat"}, nil),
+		idleDesc:        prometheus.NewDesc(prometheus.BuildFQName(namespace, subsystem, "idle"), "The number of idle connections.", []string{"db_stat"}, nil),
+		maxOpenDesc:     prometheus.NewDesc(prometheus.BuildFQName(namespace, subsystem, "max_open"), "Maximum number of open connections to the database.", []string{"db_stat"}, nil),
+		openDesc:        prometheus.NewDesc(prometheus.BuildFQName(namespace, subsystem, "open_connections"), "The number of established connections both in use and idle.", []string{"db_stat"}, nil),
+		waitedForDesc:   prometheus.NewDesc(prometheus.BuildFQName(namespace, subsystem, "waited_for"), "The total number of connections waited for.", []string{"db_stat"}, nil),
 	}
 }
 
