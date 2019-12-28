@@ -58,10 +58,49 @@ func newPrometheus(dbName string, getter sql.DBStats) *collector {
 	}
 }
 
-func (p *collector) Collect(stats sql.DBStats) {
+func (p *collector) Collect(ch chan<- prometheus.Metric) {
+	stats := p.getter.Stats()
 
-}
-
-func StartCollect() {
-
+	ch <- prometheus.MustNewConstMetric(
+		p.maxOpenDesc,
+		prometheus.GaugeValue,
+		float64(stats.MaxOpenConnections),
+		p.dbName,
+	)
+	ch <- prometheus.MustNewConstMetric(
+		p.openDesc,
+		prometheus.GaugeValue,
+		float64(stats.OpenConnections),
+		p.dbName,
+	)
+	ch <- prometheus.MustNewConstMetric(
+		p.inUseDesc,
+		prometheus.GaugeValue,
+		float64(stats.InUse),
+		p.dbName,
+	)
+	ch <- prometheus.MustNewConstMetric(
+		p.idleDesc,
+		prometheus.GaugeValue,
+		float64(stats.Idle),
+		p.dbName,
+	)
+	ch <- prometheus.MustNewConstMetric(
+		p.waitedForDesc,
+		prometheus.CounterValue,
+		float64(stats.WaitCount),
+		p.dbName,
+	)
+	ch <- prometheus.MustNewConstMetric(
+		p.maxIdleDesc,
+		prometheus.CounterValue,
+		float64(stats.MaxIdleClosed),
+		p.dbName,
+	)
+	ch <- prometheus.MustNewConstMetric(
+		p.maxLifetimeDesc,
+		prometheus.CounterValue,
+		float64(stats.MaxLifetimeClosed),
+		p.dbName,
+	)
 }
