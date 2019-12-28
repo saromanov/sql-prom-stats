@@ -8,8 +8,10 @@ import (
 )
 
 const (
-	namespace = "database_sql_stats"
-	subsystem = "golang"
+	// definition of namespace
+	defaultNamespace = "database_sql_stats"
+	// definition of subsystem
+	defaultSubsystem = "golang"
 )
 
 var (
@@ -45,6 +47,15 @@ type collector struct {
 
 // NewSQLStats provides initialization of collecting of metrics
 func NewSQLStats(dbName string, getter StatsGetter) *collector {
+	return newSQLStats(dbName, getter, defaultNamespace, defaultSubsystem)
+}
+
+// NewSQLStatsExtended provides extended initialization
+func NewSQLStatsExtended(dbName string, getter StatsGetter, namespace, subsystem string) *collector {
+	return newSQLStats(dbName, getter, namespace, subsystem)
+}
+
+func newSQLStats(dbName string, getter StatsGetter, namespace, subsystem string) *collector {
 	initPromMetricsOnce.Do(func() { prometheus.MustRegister(promMetric) })
 	return &collector{
 		dbName:          dbName,
