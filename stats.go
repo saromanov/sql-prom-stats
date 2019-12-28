@@ -70,6 +70,7 @@ func newSQLStats(dbName string, getter StatsGetter, namespace, subsystem string)
 	}
 }
 
+// Collect implements prometheus.Collector interface
 func (p *collector) Collect(ch chan<- prometheus.Metric) {
 	stats := p.getter.Stats()
 
@@ -117,6 +118,7 @@ func (p *collector) Collect(ch chan<- prometheus.Metric) {
 	)
 }
 
+// Descrive implements prometheus.Describe method
 func (p *collector) Describe(ch chan<- *prometheus.Desc) {
 	ch <- p.maxOpenDesc
 	ch <- p.openDesc
