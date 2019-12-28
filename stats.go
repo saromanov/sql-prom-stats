@@ -105,3 +105,13 @@ func (p *collector) Collect(ch chan<- prometheus.Metric) {
 		p.dbName,
 	)
 }
+
+func (p *collector) Describe(ch chan<- *prometheus.Desc) {
+	ch <- p.maxOpenDesc
+	ch <- p.openDesc
+	ch <- p.inUseDesc
+	ch <- p.idleDesc
+	ch <- p.waitedForDesc
+	ch <- p.maxIdleDesc
+	ch <- p.maxLifetimeDesc
+}
