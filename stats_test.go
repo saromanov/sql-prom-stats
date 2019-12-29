@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
+	"strconv"
 	"strings"
 	"testing"
 
@@ -23,6 +24,19 @@ func idleConnectionQuery(t *testing.T, db *sql.DB) {
 		}
 		rows.Close()
 	}
+}
+
+func getStatNumber(s, prefix string) int {
+	lines := strings.Split(s, "\n")
+	for _, line := range lines {
+		if strings.HasPrefix(line, "database_sql_stats_golang_idle") {
+			lastChar := line[len(line)-1 : len(line)]
+			res, _ := strconv.ParseInt(lastChar, 10, 32)
+			return int(res)
+		}
+	}
+
+	return 0
 }
 
 func TestGetProjectsHandler(t *testing.T) {
@@ -50,8 +64,9 @@ func TestGetProjectsHandler(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-
-	assert.Equal(t, string(body), "AA")
-	assert.NotEqual(t, -1, strings.Index(string(body), "idle"))
+	data := string(body)
+	idle := getStatNumber(data, "database_sql_stats_golang_idle")
+	assert.NotEqual(t, -1, strings.Index(data, "database_sql_stats_golang_max_idle"))
+	assert.Equal(t, 1, idle)
 
 }
