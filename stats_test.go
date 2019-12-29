@@ -39,7 +39,8 @@ func getStatNumber(s, prefix string) int {
 	lines := strings.Split(s, "\n")
 	for _, line := range lines {
 		if strings.HasPrefix(line, prefix) {
-			lastChar := line[len(line)-1 : len(line)]
+			dataSlice := strings.Split(line, " ")
+			lastChar := dataSlice[len(dataSlice)-1]
 			res, _ := strconv.ParseInt(lastChar, 10, 32)
 			return int(res)
 		}
