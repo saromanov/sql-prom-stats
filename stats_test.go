@@ -97,7 +97,7 @@ func TestGetProjectsHandlerLeakConnections(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	collector := NewSQLStats("db_name", db)
+	collector := NewSQLStatsExtended("db_name", db, "test", "test")
 
 	prometheus.MustRegister(collector)
 	srv := httptest.NewServer(promhttp.Handler())
@@ -105,7 +105,7 @@ func TestGetProjectsHandlerLeakConnections(t *testing.T) {
 	leakConnectionsQuery(t, db)
 	data, err := makeRequest(srv.URL)
 	assert.NoError(t, err)
-	inUse := getStatNumber(data, "database_sql_stats_golang_in_use")
-	assert.NotEqual(t, -1, strings.Index(data, "database_sql_stats_golang_in_use"))
+	inUse := getStatNumber(data, "test_test_in_use")
+	assert.NotEqual(t, -1, strings.Index(data, "test_test_in_use"))
 	assert.Equal(t, 10, inUse)
 }
