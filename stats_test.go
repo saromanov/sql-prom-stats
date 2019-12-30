@@ -67,7 +67,7 @@ func makeRequest(url string) (string, error) {
 }
 
 func TestGetProjectsHandler(t *testing.T) {
-	db, err := sql.Open("postgres", "postgres://pinger:pinger@localhost:5432/pinger?sslmode=disable")
+	db, err := sql.Open("postgres", "postgres://postgres:postgres@localhost:5432/postgres?sslmode=disable")
 	if err != nil {
 		t.Fatal(err)
 	}
