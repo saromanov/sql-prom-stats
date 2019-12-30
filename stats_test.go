@@ -92,7 +92,7 @@ func TestGetProjectsHandler(t *testing.T) {
 }
 
 func TestGetProjectsHandlerLeakConnections(t *testing.T) {
-	db, err := sql.Open("postgres", "postgres://postgres:postgres@localhost:5432/postgres")
+	db, err := sql.Open("postgres", "postgres://postgres:postgres@localhost:5432/postgres?sslmode=disable")
 	if err != nil {
 		t.Fatal(err)
 	}

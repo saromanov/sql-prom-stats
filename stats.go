@@ -31,9 +31,9 @@ type StatsGetter interface {
 	Stats() sql.DBStats
 }
 
-// collector defines collecting of metrics
+// Collector defines collecting of metrics
 // to prometheus
-type collector struct {
+type Collector struct {
 	dbName          string
 	getter          StatsGetter
 	inUseDesc       *prometheus.Desc
@@ -46,18 +46,18 @@ type collector struct {
 }
 
 // NewSQLStats provides initialization of collecting of metrics
-func NewSQLStats(dbName string, getter StatsGetter) *collector {
+func NewSQLStats(dbName string, getter StatsGetter) *Collector {
 	return newSQLStats(dbName, getter, defaultNamespace, defaultSubsystem)
 }
 
 // NewSQLStatsExtended provides extended initialization
-func NewSQLStatsExtended(dbName string, getter StatsGetter, namespace, subsystem string) *collector {
+func NewSQLStatsExtended(dbName string, getter StatsGetter, namespace, subsystem string) *Collector {
 	return newSQLStats(dbName, getter, namespace, subsystem)
 }
 
-func newSQLStats(dbName string, getter StatsGetter, namespace, subsystem string) *collector {
+func newSQLStats(dbName string, getter StatsGetter, namespace, subsystem string) *Collector {
 	initPromMetricsOnce.Do(func() { prometheus.MustRegister(promMetric) })
-	return &collector{
+	return &Collector{
 		dbName:          dbName,
 		getter:          getter,
 		maxIdleDesc:     prometheus.NewDesc(prometheus.BuildFQName(namespace, subsystem, "max_idle"), "The total number of connections closed due to SetMaxIdleConns", []string{"db_stat"}, nil),
@@ -71,7 +71,7 @@ func newSQLStats(dbName string, getter StatsGetter, namespace, subsystem string)
 }
 
 // Collect implements prometheus.Collector interface
-func (p *collector) Collect(ch chan<- prometheus.Metric) {
+func (p *Collector) Collect(ch chan<- prometheus.Metric) {
 	stats := p.getter.Stats()
 
 	ch <- prometheus.MustNewConstMetric(
@@ -119,7 +119,7 @@ func (p *collector) Collect(ch chan<- prometheus.Metric) {
 }
 
 // Descrive implements prometheus.Describe method
-func (p *collector) Describe(ch chan<- *prometheus.Desc) {
+func (p *Collector) Describe(ch chan<- *prometheus.Desc) {
 	ch <- p.maxOpenDesc
 	ch <- p.openDesc
 	ch <- p.inUseDesc
