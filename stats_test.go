@@ -18,7 +18,7 @@ import (
 
 func idleConnectionQuery(t *testing.T, db *sql.DB) {
 	for i := 0; i < 100; i++ {
-		rows, err := db.Query("SELECT * FROM accounts")
+		rows, err := db.Query("SELECT 1")
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -28,7 +28,7 @@ func idleConnectionQuery(t *testing.T, db *sql.DB) {
 
 func leakConnectionsQuery(t *testing.T, db *sql.DB) {
 	for i := 0; i < 10; i++ {
-		_, err := db.Query("SELECT * FROM accounts")
+		_, err := db.Query("SELECT 1")
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -67,7 +67,7 @@ func makeRequest(url string) (string, error) {
 }
 
 func TestGetProjectsHandler(t *testing.T) {
-	db, err := sql.Open("postgres", "postgres://pinger:pinger@localhost:5432/pinger")
+	db, err := sql.Open("postgres", "postgres://pinger:pinger@localhost:5432/pinger?sslmode=disable")
 	if err != nil {
 		t.Fatal(err)
 	}
